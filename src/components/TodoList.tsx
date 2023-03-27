@@ -1,22 +1,25 @@
 import * as React from "react";
-import { ITodosListProps } from "../types/todoType";
+import { useSelector, useDispatch } from "react-redux";
+import { remove, toggleDone, update } from "../state/slices/todo.slice";
+import type { RootState } from "../state/store";
 
-const TodoList: React.FC<ITodosListProps> = ({
-  todos,
-  removeTodo,
-  setIsDone,
-  updateTodo,
-}) => {
-  const [activeTodoIndex, setActiveTodoIndex] = React.useState<number | undefined>(undefined);
+const TodoList: React.FC = () => {
+  const { list } = useSelector((state: RootState) => state.todos);
+
+  const [activeTodoIndex, setActiveTodoIndex] = React.useState<
+    number | undefined
+  >(undefined);
   const [message, setMessege] = React.useState<string>("");
+  const dispatch = useDispatch();
+
   return (
     <div>
       <ul>
-        {todos.map((value, index) => {
+        {list.map((value, index) => {
           return (
             <li key={index}>
               <h6>
-                <span style={{ fontWeight: 'bold' }}>{value.id}</span>
+                <span style={{ fontWeight: "bold" }}>{value.id}</span>
                 {activeTodoIndex === index ? (
                   <input
                     type="text"
@@ -29,16 +32,18 @@ const TodoList: React.FC<ITodosListProps> = ({
                   <span>{value.message}</span>
                 )}
               </h6>
-              <button onClick={() => removeTodo(value.id)}>Delete</button>
+              <button onClick={() => dispatch(remove({ id: value.id }))}>
+                Delete
+              </button>{" "}
               <input
                 type="checkbox"
-                onChange={() => setIsDone(value.id)}
+                onChange={() => dispatch(toggleDone(value))}
                 checked={value.done}
               />
               <button
                 onClick={() => {
                   if (activeTodoIndex === index) {
-                    updateTodo(value.id, message);
+                    dispatch(update({ id: value.id, message: message }));
                     setActiveTodoIndex(undefined);
                   } else {
                     setMessege(value.message);
@@ -46,9 +51,7 @@ const TodoList: React.FC<ITodosListProps> = ({
                   }
                 }}
               >
-                {
-                  activeTodoIndex === index ? 'Update' : 'Edit'
-                }
+                {activeTodoIndex === index ? "Save" : "Edit"}
               </button>
             </li>
           );

@@ -15,5 +15,4 @@ export interface ITodosState {
   activeItemIndex: number | undefined;
 }
 
-
-export interface IProps { }
+export interface IProps {}
