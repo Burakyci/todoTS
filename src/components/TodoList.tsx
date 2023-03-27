@@ -1,14 +1,14 @@
 import * as React from "react";
-import { todosType } from "../types/todoType";
+import { ITodosListProps } from "../types/todoType";
 
-const TodoList: React.FC<todosType> = ({
+const TodoList: React.FC<ITodosListProps> = ({
   todos,
   removeTodo,
-  isDone,
+  setIsDone,
   updateTodo,
 }) => {
-  const [updateMod, setupdateMod] = React.useState<boolean>(false);
-  const [massege, setMessege] = React.useState<string>("");
+  const [activeTodoIndex, setActiveTodoIndex] = React.useState<number | undefined>(undefined);
+  const [message, setMessege] = React.useState<string>("");
   return (
     <div>
       <ul>
@@ -16,40 +16,44 @@ const TodoList: React.FC<todosType> = ({
           return (
             <li key={index}>
               <h6>
-                {value.id}
-                {updateMod ? (
-                  <> {value.message}</>
+                <span style={{ fontWeight: 'bold' }}>{value.id}</span>
+                {activeTodoIndex === index ? (
+                  <input
+                    type="text"
+                    onChange={(e) => {
+                      setMessege(e.target.value);
+                    }}
+                    value={message}
+                  />
                 ) : (
-                  <>
-                    <input
-                      type="text"
-                      onChange={(e) => {
-                        setMessege(e.target.value);
-                      }}
-                      value={massege}
-                    />
-                  </>
+                  <span>{value.message}</span>
                 )}
               </h6>
               <button onClick={() => removeTodo(value.id)}>Delete</button>
               <input
                 type="checkbox"
-                onChange={() => isDone(value.id)}
+                onChange={() => setIsDone(value.id)}
                 checked={value.done}
               />
               <button
                 onClick={() => {
-                  setupdateMod(!updateMod);
-                  updateTodo(value.id, massege);
+                  if (activeTodoIndex === index) {
+                    updateTodo(value.id, message);
+                    setActiveTodoIndex(undefined);
+                  } else {
+                    setMessege(value.message);
+                    setActiveTodoIndex(index);
+                  }
                 }}
               >
-                Update
+                {
+                  activeTodoIndex === index ? 'Update' : 'Edit'
+                }
               </button>
             </li>
           );
         })}
       </ul>
-      <input type="checkbox" />
     </div>
   );
 };

@@ -1,12 +1,12 @@
 import * as React from "react";
 import TodoList from "./TodoList";
-import { todoType } from "../types/todoType";
+import { ITodoType } from "../types/todoType";
 import { TodoModel } from "../models/TodoModel";
 import { CompletionTriggerKind } from "typescript";
 
 const Todos: React.FC = () => {
   const [todo, setTodo] = React.useState<string>("");
-  const [todos, setTodos] = React.useState<todoType[]>([
+  const [todos, setTodos] = React.useState<ITodoType[]>([
     { id: 1, message: "Learn TypeScript", done: false },
     { id: 2, message: "Build a project", done: true },
     { id: 3, message: "Deploy to production", done: false },
@@ -21,7 +21,7 @@ const Todos: React.FC = () => {
     setTodos(todos.filter((todo) => todo.id !== id));
   };
 
-  const isDone = (id: number) => {
+  const setIsDone = (id: number) => {
     setTodos((prev) => {
       const newTodos = prev.map((td) => {
         if (td.id === id) {
@@ -36,6 +36,7 @@ const Todos: React.FC = () => {
       return newTodos;
     });
   };
+
   const updateTodo = (id: number, message: string) => {
     setTodos((prev) => {
       const newTodo = prev.map((td) => {
@@ -67,7 +68,7 @@ const Todos: React.FC = () => {
       <TodoList
         todos={todos}
         removeTodo={removeTodo}
-        isDone={isDone}
+        setIsDone={setIsDone}
         updateTodo={updateTodo}
       />
     </div>
