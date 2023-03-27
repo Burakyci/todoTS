@@ -29,8 +29,7 @@ const todoSlice = createSlice({
       state.list = currentList;
     },
     add: (state, action: { payload: ITodoType }) => {
-      const { message, id } = action.payload;
-
+      const { message } = action.payload;
       const data = new TodoModel(message, false, state.list.length + 1);
       const currentList = [...state.list];
       currentList.push({
@@ -49,8 +48,16 @@ const todoSlice = createSlice({
       }
       state.list = currentList;
     },
+    activeTodoActive: (
+      state,
+      action: { payload: { index: number | undefined } }
+    ) => {
+      const { index } = action.payload;
+      state.activeItemIndex = index;
+    },
   },
 });
 
-export const { toggleDone, update, add, remove } = todoSlice.actions;
+export const { toggleDone, update, add, remove, activeTodoActive } =
+  todoSlice.actions;
 export default todoSlice.reducer;

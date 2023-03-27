@@ -1,14 +1,21 @@
 import * as React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { remove, toggleDone, update } from "../state/slices/todo.slice";
+import {
+  remove,
+  toggleDone,
+  update,
+  activeTodoActive,
+} from "../state/slices/todo.slice";
 import type { RootState } from "../state/store";
 
 const TodoList: React.FC = () => {
-  const { list } = useSelector((state: RootState) => state.todos);
+  const { list, activeItemIndex } = useSelector(
+    (state: RootState) => state.todos
+  );
 
-  const [activeTodoIndex, setActiveTodoIndex] = React.useState<
-    number | undefined
-  >(undefined);
+  // const [activeTodoIndex, setActiveTodoIndex] = React.useState<
+  //   number | undefined
+  // >(undefined);
   const [message, setMessege] = React.useState<string>("");
   const dispatch = useDispatch();
 
@@ -20,7 +27,7 @@ const TodoList: React.FC = () => {
             <li key={index}>
               <h6>
                 <span style={{ fontWeight: "bold" }}>{value.id}</span>
-                {activeTodoIndex === index ? (
+                {activeItemIndex === index ? (
                   <input
                     type="text"
                     onChange={(e) => {
@@ -42,16 +49,16 @@ const TodoList: React.FC = () => {
               />
               <button
                 onClick={() => {
-                  if (activeTodoIndex === index) {
+                  if (activeItemIndex === index) {
                     dispatch(update({ id: value.id, message: message }));
-                    setActiveTodoIndex(undefined);
+                    dispatch(activeTodoActive({ index: undefined }));
                   } else {
                     setMessege(value.message);
-                    setActiveTodoIndex(index);
+                    dispatch(activeTodoActive({ index: index }));
                   }
                 }}
               >
-                {activeTodoIndex === index ? "Save" : "Edit"}
+                {activeItemIndex === index ? "Save" : "Edit"}
               </button>
             </li>
           );
