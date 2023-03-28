@@ -1,62 +1,37 @@
 import * as React from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { remove, toggleDone, update } from "../state/slices/todo.slice";
-import type { RootState } from "../state/store";
+import { useSelector } from "react-redux";
+import { getTodos } from "../state/slices/todo.slice";
+import { RootState, useAppDispatch } from "../state/store";
+import TodoItem from "./TodoItem";
 
 const TodoList: React.FC = () => {
-  const { list } = useSelector((state: RootState) => state.todos);
-
-  const [activeTodoIndex, setActiveTodoIndex] = React.useState<
-    number | undefined
-  >(undefined);
-  const [message, setMessege] = React.useState<string>("");
-  const dispatch = useDispatch();
-
+  const dispatch = useAppDispatch();
+  const { list, loading, error } = useSelector((state: RootState) => state.todos);
+  React.useEffect(() => {
+    dispatch(getTodos());
+  }, []);
   return (
     <div>
-      <ul>
-        {list.map((value, index) => {
-          return (
-            <li key={index}>
-              <h6>
-                <span style={{ fontWeight: "bold" }}>{value.id}</span>
-                {activeTodoIndex === index ? (
-                  <input
-                    type="text"
-                    onChange={(e) => {
-                      setMessege(e.target.value);
-                    }}
-                    value={message}
+      {
+        loading ?
+          (<h2>
+            Loading ...
+          </h2>)
+          : error ?
+            (
+              <h2>{error}</h2>
+            ) : (
+              <ul>
+                {list.map((value, index) => (
+                  <TodoItem
+                    key={value.id}
+                    item={value}
+                    index={index}
                   />
-                ) : (
-                  <span>{value.message}</span>
-                )}
-              </h6>
-              <button onClick={() => dispatch(remove({ id: value.id }))}>
-                Delete
-              </button>{" "}
-              <input
-                type="checkbox"
-                onChange={() => dispatch(toggleDone(value))}
-                checked={value.done}
-              />
-              <button
-                onClick={() => {
-                  if (activeTodoIndex === index) {
-                    dispatch(update({ id: value.id, message: message }));
-                    setActiveTodoIndex(undefined);
-                  } else {
-                    setMessege(value.message);
-                    setActiveTodoIndex(index);
-                  }
-                }}
-              >
-                {activeTodoIndex === index ? "Save" : "Edit"}
-              </button>
-            </li>
-          );
-        })}
-      </ul>
+                ))}
+              </ul>
+            )
+      }
     </div>
   );
 };

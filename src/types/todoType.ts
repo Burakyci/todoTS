@@ -1,18 +1,26 @@
-export interface ITodoType {
+export interface ITodo {
   id: number;
-  message: string;
+  title: string;
   done: boolean;
 }
+
+export interface ITodoItemProps {
+  index: number;
+  item: ITodo;
+}
+
 export interface ITodosListProps {
-  todos: ITodoType[];
+  todos: ITodo[];
   removeTodo: (id: number) => void;
   setIsDone: (id: number) => any;
   updateTodo: (id: number, message: string) => any;
 }
 
 export interface ITodosState {
-  list: ITodoType[];
+  list: ITodo[];
+  loading: boolean;
+  error: string | undefined;
   activeItemIndex: number | undefined;
 }
 
-export interface IProps {}
+export interface IProps { }
