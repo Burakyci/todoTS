@@ -1,6 +1,6 @@
 import React from "react";
 import "./App.css";
-import Todos from "./components/Todos";
+import Todos from "./pages/TodosPage";
 import { Provider } from "react-redux";
 import { store } from "./state/store";
 function App() {
