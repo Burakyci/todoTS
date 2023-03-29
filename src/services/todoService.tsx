@@ -12,8 +12,7 @@ class TodoService {
       return data;
     } catch (error: any) {
       const result = new OperationResult(false, "error", undefined);
-      return error;
-    }
+      return error
   }
 }
 
