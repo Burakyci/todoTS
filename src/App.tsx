@@ -1,12 +1,16 @@
 import React from "react";
 import "./App.css";
-import TodosPage from "./pages/TodosPage";
 import { Provider } from "react-redux";
 import { store } from "./state/store";
+import { BrowserRouter, createBrowserRouter } from "react-router-dom";
+import AppRouter from "./AppRouter";
+
 function App() {
   return (
     <Provider store={store}>
-      <TodosPage />
+      <BrowserRouter>
+        <AppRouter />
+      </BrowserRouter>
     </Provider>
   );
 }

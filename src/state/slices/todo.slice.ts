@@ -1,27 +1,18 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { TodoModel } from "../../models/TodoModel";
 import { ITodosState, ITodo } from "../../types/todoType";
-
-const fetchTodos = async (): Promise<ITodo[] | string> => {
-  try {
-    const url = 'https://jsonplaceholder.typicode.com/todos';
-    const json = (await fetch(url)).json();
-    return json;
-  } catch (error: any) {
-    return error.message as string;
-  }
-};
+import todoServices from "../../services/todoServices";
 
 export const getTodos = createAsyncThunk(
   "todos/getTodos",
   async (_, thunkApi) => {
-    const result = await fetchTodos();
+    const result = await todoServices.getTodos();
     if (Array.isArray(result)) {
       return result;
-    } else if (typeof result === 'string') {
+    } else if (typeof result === "string") {
       return thunkApi.rejectWithValue(result);
     } else {
-      return thunkApi.rejectWithValue('Unknown error');
+      return thunkApi.rejectWithValue("Unknown error");
     }
   }
 );
@@ -30,7 +21,7 @@ const initialState: ITodosState = {
   activeItemIndex: undefined,
   list: [],
   error: undefined,
-  loading: false
+  loading: false,
 };
 
 const todoSlice = createSlice({
@@ -69,34 +60,32 @@ const todoSlice = createSlice({
       const targetIndex = currentList.findIndex((c) => c.id === id);
       if (targetIndex > -1) {
         const _todo = currentList[targetIndex];
-        _todo.done = !_todo.done;
+        _todo.complated = !_todo.complated;
         currentList.splice(targetIndex, 1, _todo);
       }
       state.list = currentList;
     },
     setActiveItemIndex: (state, action: { payload: number | undefined }) => {
       state.activeItemIndex = action.payload;
-    }
+    },
   },
   extraReducers: (builder) => {
-    builder.addCase(getTodos.pending, (state) => {
-      state.loading = true;
-    }).addCase(getTodos.fulfilled, (state, action) => {
-      state.list = action.payload as ITodo[];
-      state.loading = false;
-    }).addCase(getTodos.rejected, (state, action) => {
-      state.error = action.payload as string;
-      state.loading = false;
-    });
-  }
+    builder
+      .addCase(getTodos.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getTodos.fulfilled, (state, action) => {
+        state.list = action.payload as ITodo[];
+        state.loading = false;
+      })
+      .addCase(getTodos.rejected, (state, action) => {
+        state.error = action.payload as string;
+        state.loading = false;
+      });
+  },
 });
 
-export const {
-  toggleDone,
-  update,
-  add,
-  remove,
-  setActiveItemIndex
-} = todoSlice.actions;
+export const { toggleDone, update, add, remove, setActiveItemIndex } =
+  todoSlice.actions;
 
 export default todoSlice.reducer;

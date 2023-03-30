@@ -1,7 +1,8 @@
 export interface ITodo {
   id: number;
+  userId?: number | undefined;
   title: string;
-  done: boolean;
+  complated: boolean;
 }
 
 export interface ITodoItemProps {
@@ -23,4 +24,4 @@ export interface ITodosState {
   activeItemIndex: number | undefined;
 }
 
-export interface IProps { }
+export interface IProps {}

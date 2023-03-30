@@ -2,11 +2,17 @@ import { ITodo } from "../types/todoType";
 
 export class TodoModel implements ITodo {
   id = 1;
+  userId? = undefined;
   title = "a";
-  done = false;
-  constructor(message: string, done: boolean = false, id?: number) {
+  complated = false;
+  constructor(
+    message: string,
+    done: boolean = false,
+    id?: number,
+    userId?: number
+  ) {
     this.title = message;
-    this.done = done;
-    this.id = id ?? (new Date()).getTime();
+    this.complated = done;
+    this.id = id ?? new Date().getTime();
   }
 }
