@@ -3,21 +3,16 @@ import { useSelector } from "react-redux";
 import { RootState } from "../state/store";
 import { useSearchParams, NavLink } from "react-router-dom";
 
-const Search = () => {
+const Search: React.FC = () => {
   const { list, loading, error } = useSelector(
     (state: RootState) => state.todos
   );
   const [searchParam, setSearchParam] = useSearchParams();
-  const searchTerm = searchParam.get("todo") || "";
-
-  React.useEffect(() => {
-    console.log(list);
-  }, [list]);
-
+  const searchTerm = searchParam.get("todos") || "";
   const handleSearch = (e: any) => {
-    const todo = e.target.value;
+    const todos = e.target.value;
 
-    if (todo) setSearchParam({ todo });
+    if (todos) setSearchParam({ todos });
     else {
       setSearchParam({});
     }
@@ -26,7 +21,7 @@ const Search = () => {
     <div>
       <label htmlFor="">Search</label>
       <input type="text" value={searchTerm} onChange={handleSearch} />
-      <NavLink to="/">Todo</NavLink>
+      <NavLink to="/">todo</NavLink>{" "}
       <div>
         {loading ? (
           <h2>Loading ...</h2>

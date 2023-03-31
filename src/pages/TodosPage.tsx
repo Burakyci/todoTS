@@ -30,12 +30,9 @@ const TodosPage: React.FC = () => {
       >
         add{" "}
       </button>
-      <NavLink
-        to="/search
-      "
-      >
-        Search
-      </NavLink>
+      <NavLink to="/search">Search</NavLink>
+      <NavLink to="SearchTodo">/searchfetch</NavLink>
+
       <TodoList />
     </div>
   );

@@ -4,6 +4,7 @@ import TodosPage from "./pages/TodosPage";
 import Search from "./pages/Search";
 import { useAppDispatch } from "./state/store";
 import { getTodos } from "./state/slices/todo.slice";
+import SearchTodo from "./pages/SearchTodo";
 
 const AppRouter: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -15,6 +16,7 @@ const AppRouter: React.FC = () => {
       <Routes>
         <Route index element={<TodosPage />} />
         <Route path="search" element={<Search />} />
+        <Route path="searchtodo" element={<SearchTodo />} />
       </Routes>
     </div>
   );

@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { TodoModel } from "../../models/TodoModel";
 import { ITodosState, ITodo } from "../../types/todoType";
 import todoServices from "../../services/todoServices";
+import searchTodoService from "../../services/searchTodoService";
 
 export const getTodos = createAsyncThunk(
   "todos/getTodos",
@@ -13,6 +14,18 @@ export const getTodos = createAsyncThunk(
       return thunkApi.rejectWithValue(result);
     } else {
       return thunkApi.rejectWithValue("Unknown error");
+    }
+  }
+);
+
+export const getSearchTodo = createAsyncThunk(
+  "todos/getSearchTodo",
+  async (search: string, thunkApi) => {
+    try {
+      const res = await searchTodoService.getTodos(search);
+      return res;
+    } catch (error) {
+      alert(error);
     }
   }
 );
@@ -45,7 +58,7 @@ const todoSlice = createSlice({
       state.list = currentList;
     },
     add: (state, action: { payload: ITodo }) => {
-      const { title: message, id } = action.payload;
+      const { title: message } = action.payload;
 
       const data = new TodoModel(message, false, state.list.length + 1);
       const currentList = [...state.list];
@@ -79,6 +92,18 @@ const todoSlice = createSlice({
         state.loading = false;
       })
       .addCase(getTodos.rejected, (state, action) => {
+        state.error = action.payload as string;
+        state.loading = false;
+      });
+    builder
+      .addCase(getSearchTodo.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getSearchTodo.fulfilled, (state, action) => {
+        state.list = action.payload as ITodo[];
+        state.loading = false;
+      })
+      .addCase(getSearchTodo.rejected, (state, action) => {
         state.error = action.payload as string;
         state.loading = false;
       });
