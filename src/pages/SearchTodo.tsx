@@ -21,8 +21,10 @@ const SearchTodo: React.FC = () => {
   console.log(searchTerm);
 
   React.useEffect(() => {
-    dispatch(getSearchTodo(`${searchParam}`));
+    const userId = searchParam.get("userId") ?? undefined;
+    dispatch(getSearchTodo({ userId }));
   }, [searchParam]);
+
   return (
     <div>
       <label htmlFor="">Search</label>
@@ -34,10 +36,13 @@ const SearchTodo: React.FC = () => {
         ) : error ? (
           <h2>{error}</h2>
         ) : (
+          // TODO: add checkbox for completed search params
           <ul>
-            {list.map((todo, key) => {
-              return <li key={key}>{todo.title}</li>;
-            })}
+            {
+              list.map((todo, key) => {
+                return <li key={key}>{todo.title}</li>;
+              })
+            }
           </ul>
         )}
       </div>

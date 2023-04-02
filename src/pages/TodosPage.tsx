@@ -24,7 +24,7 @@ const TodosPage: React.FC = () => {
 
       <button
         onClick={() => {
-          dispatch(add({ id: 1, title: `${todo}`, complated: false }));
+          dispatch(add({ id: 1, title: `${todo}`, completed: false }));
           setTodo("");
         }}
       >

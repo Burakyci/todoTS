@@ -2,7 +2,8 @@ export interface ITodo {
   id: number;
   userId?: number | undefined;
   title: string;
-  complated: boolean;
+  completed: boolean;
+  custom?: string;
 }
 
 export interface ITodoItemProps {
@@ -24,4 +25,10 @@ export interface ITodosState {
   activeItemIndex: number | undefined;
 }
 
-export interface IProps {}
+export interface ITodoSearchParams {
+  [key: string]: any;
+  userId?: string;
+  completed?: boolean;
+}
+
+export interface IProps { }

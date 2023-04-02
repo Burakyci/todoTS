@@ -33,7 +33,7 @@ const TodoItem: React.FC<ITodoItemProps> = ({ item, index }) => {
       <input
         type="checkbox"
         onChange={() => dispatch(toggleDone({ id: item.id }))}
-        checked={item.complated}
+        checked={item.completed}
       />
       <button
         onClick={() => {

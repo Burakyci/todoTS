@@ -1,13 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { TodoModel } from "../../models/TodoModel";
-import { ITodosState, ITodo } from "../../types/todoType";
+import { ITodosState, ITodo, ITodoSearchParams } from "../../types/todoType";
 import todoServices from "../../services/todoServices";
-import searchTodoService from "../../services/searchTodoService";
 
 export const getTodos = createAsyncThunk(
   "todos/getTodos",
   async (_, thunkApi) => {
-    const result = await todoServices.getTodos();
+    const result = await todoServices.getTodos({ userId: "1" });
     if (Array.isArray(result)) {
       return result;
     } else if (typeof result === "string") {
@@ -20,9 +19,9 @@ export const getTodos = createAsyncThunk(
 
 export const getSearchTodo = createAsyncThunk(
   "todos/getSearchTodo",
-  async (search: string, thunkApi) => {
+  async (params: ITodoSearchParams, thunkApi) => {
     try {
-      const res = await searchTodoService.getTodos(search);
+      const res = await todoServices.getTodos(params);
       return res;
     } catch (error) {
       alert(error);
@@ -59,8 +58,7 @@ const todoSlice = createSlice({
     },
     add: (state, action: { payload: ITodo }) => {
       const { title: message } = action.payload;
-
-      const data = new TodoModel(message, false, state.list.length + 1);
+      const data = new TodoModel(action.payload);
       const currentList = [...state.list];
       currentList.push({
         ...data,
@@ -73,7 +71,7 @@ const todoSlice = createSlice({
       const targetIndex = currentList.findIndex((c) => c.id === id);
       if (targetIndex > -1) {
         const _todo = currentList[targetIndex];
-        _todo.complated = !_todo.complated;
+        _todo.completed = !_todo.completed;
         currentList.splice(targetIndex, 1, _todo);
       }
       state.list = currentList;
@@ -100,7 +98,7 @@ const todoSlice = createSlice({
         state.loading = true;
       })
       .addCase(getSearchTodo.fulfilled, (state, action) => {
-        state.list = action.payload as ITodo[];
+        state.list = action.payload?.data as ITodo[];
         state.loading = false;
       })
       .addCase(getSearchTodo.rejected, (state, action) => {
